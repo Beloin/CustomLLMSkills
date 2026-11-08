@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "my-skills",
+  "version": "0.1.0",
+  "description": "Personal collection of custom skills for Claude Code and OpenCode.",
+  "author": {
+    "name": "my-skills"
+  },
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "agent-skills"
+  ]
+}

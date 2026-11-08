@@ -5,8 +5,10 @@
   "author": {
     "name": "my-skills"
   },
+  "license": "MIT",
+  "icon": ".claude-plugin/icon.png",
   "keywords": [
     "skills",
-    "personal"
+    "agent-skills"
   ]
 }

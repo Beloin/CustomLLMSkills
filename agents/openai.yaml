@@ -1,0 +1,6 @@
+name: my-skills
+description: >
+  Personal skill repository. Holds one skill per directory under skills/, each
+  with a SKILL.md, helper scripts, and reference documents. Use when adding a
+  skill, installing the repository's skills into Claude Code or OpenCode, or
+  checking the repository against the Agent Skills specification.

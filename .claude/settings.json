@@ -1,0 +1,5 @@
+{
+  "enabledPlugins": {
+    "skill-repo@netresearch-claude-code-marketplace": true
+  }
+}

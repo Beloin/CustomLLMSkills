@@ -1,12 +1,12 @@
 ---
 name: slide-creator
 description: >
-  Build styled 16:9 PowerPoint decks (.pptx) with python-pptx using a dark theme
-  and reusable layout helpers. Use when the user asks to create a presentation,
-  a slide deck, a .pptx file, slides for a talk, a conference talk, a thesis
-  defense deck, or wants to restyle/extend an existing deck built with
-  deck_kit.py. Triggers on: pptx, powerpoint, slide deck, presentation, slides,
-  "make a deck", "build slides", "converter para pptx".
+  Use when the user asks for a PowerPoint deck, a .pptx file, slides for a
+  talk, a conference presentation, or a thesis defense deck. Builds a styled
+  16:9 dark deck from a Python script with python-pptx and a reusable layout
+  toolkit, then renders it for a visual check.
+metadata:
+  version: 0.1.0
 ---
 
 # Slide creator
@@ -81,39 +81,15 @@ Follow this order every time.
 
 ## Layout catalog
 
-| Method | Use for | Item shape |
-|---|---|---|
-| `title_slide` | cover | kicker, `parts=[(text, style)]`, subtitle, meta |
-| `section` | section divider | kicker, title, sub |
-| `content` | any content slide | returns the slide; then add blocks |
-| `text` | one paragraph of prose | body string |
-| `cards` | 2-6 parallel concepts | `(tag, title, desc)` or `(tag, title, desc, accent)` |
-| `steps` | ordered process | `(title, desc)` |
-| `bullets` | term + explanation list | `(term, desc)` |
-| `callout` | the one-line thesis of the slide | `[(text, "x"\|"em"\|"q")]` |
-| `code` | code or config sample | `[(text, color)]` |
-| `table` | comparison or numbers | headers, rows, `accent_cols={col: color}`, `col_w` |
-| `kpis` | headline metrics | `(value, label, note)` |
-| `flow` | left-to-right pipeline | `(title, desc)` |
-| `references` | bibliography | `(author, citation)` |
-| `quote` | pull quote | text, cite |
-| `image` | picture or figure | path, `width`, `height` (ratio preserved) |
+Every layout helper, its item shape, the color attributes, and the geometry
+grid: `references/layouts.md`. Read it when picking a layout or restyling a
+deck.
 
-Style codes inside `parts`: `"x"` normal, `"em"` emphasis (white, bold),
-`"q"` mono accent (teal).
-
-Colors come from `d.t`: `d.t.accent` (teal), `d.t.accent2` (amber),
-`d.t.text`, `d.t.muted`, `d.t.faint`, `d.t.surface`, `d.t.line`.
-
-## Geometry rules
-
-- Canvas is 13.333 x 7.5 inches (16:9). Margin is 0.7.
-- Header occupies 0.5 to 1.77. Content starts at 2.0 or below.
-- Footer sits at 7.02 to 7.14. Content must end by 6.9.
-- Three-column grid: card width is `d.t.col3`, gap is 0.25.
-- Text boxes do not clip in PowerPoint. A box set to 0.5 inches tall still
-  renders a full paragraph. Give boxes the height the text actually needs, or
-  the following block overlaps it.
+Quick map: `title_slide` cover, `section` divider, `content` scaffold,
+`text` prose, `cards` parallel concepts, `steps` ordered process, `bullets`
+term plus explanation, `callout` thesis line, `code` code block, `table`
+comparison, `kpis` headline metrics, `flow` pipeline, `references`
+bibliography, `quote` pull quote, `image` picture.
 
 ## The example
 
@@ -151,32 +127,22 @@ for p in audit("slides.pptx"):
     print("audit:", p)
 ```
 
-## Audit
+## Verification
 
-`audit(path)` returns a list of strings. It flags shapes outside the canvas
-and text whose estimated height exceeds its box by more than 35 percent. The
+`audit(path)` from `scripts/deck_kit.py` flags shapes outside the canvas and
+text whose estimated height exceeds its box by more than 35 percent. The
 estimate is rough, so treat hits as "look at this slide", not "this is
 broken". Run it after every build.
 
-## Restyling
+Render the deck and read the images before calling it done:
 
-Pass a custom `Theme` to `Deck`:
-
-```python
-from deck_kit import Deck, Theme
-
-t = Theme(accent="FF8A5C", accent2="3EE6D0", display="Inter", body="Inter")
-d = Deck(theme=t)
+```bash
+libreoffice --headless --convert-to pdf --outdir /tmp deck.pptx
+pdftoppm -png -r 60 /tmp/deck.pdf /tmp/deck
 ```
 
-Hex values are without the `#`. `Theme` also takes `bg`, `surface`, `surface2`,
-`line`, `text`, `muted`, `faint`, `display`, `body`, `mono`, `width`, `height`,
-`margin`.
-
-For a light deck, set `bg` to `FFFFFF`, `text` to `111827`, `muted` to `4B5563`,
-`faint` to `9CA3AF`, `surface` to `F3F4F6`, `surface2` to `E5E7EB`, `line` to
-`D1D5DB`. The `callout` helper hardcodes a dark teal background, so a light
-theme needs that one changed in `deck_kit.py`.
+The audit catches off-canvas shapes and gross overflow. Only the image catches
+a bad layout.
 
 ## Provenance
 
