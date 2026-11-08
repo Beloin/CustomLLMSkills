@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "my-skills",
+  "description": "Personal skill repository. One plugin, one skill per directory.",
+  "owner": {
+    "name": "my-skills"
+  },
+  "plugins": [
+    {
+      "name": "my-skills",
+      "description": "Personal collection of custom skills for Claude Code and OpenCode.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
