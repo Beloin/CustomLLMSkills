@@ -75,37 +75,7 @@ containing `name` and `description`. Everything else is optional.
 
 ## Installation
 
-Install the skills into the hosts you use:
-
-```bash
-python3 scripts/skill_repo.py list
-python3 scripts/skill_repo.py install
-python3 scripts/skill_repo.py install slide-creator
-python3 scripts/skill_repo.py uninstall
-```
-
-| Flag | Effect |
-|---|---|
-| `--target claude\|opencode\|both` | which host to install into (default: both) |
-| `--mode link\|copy` | symlink the skill (default) or copy it |
-| `--dry-run` | show what would happen, change nothing |
-
-Install locations:
-
-| Host | Path |
-|---|---|
-| Claude Code | `~/.claude/skills/<name>` |
-| OpenCode | `~/.config/opencode/skills/<name>` |
-
-Override with `CLAUDE_CONFIG_DIR` and `OPENCODE_CONFIG_DIR`. OpenCode also
-reads `~/.claude/skills` as a compatibility root, so a Claude Code install
-alone is already visible to OpenCode. Installing for both keeps each host's
-own directory authoritative.
-
-The default is a symlink, so edits in this repository take effect
-immediately with no reinstall.
-
-As a Claude Code plugin:
+### Claude Code, as a plugin
 
 ```
 /plugin marketplace add Beloin/CustomLLMSkills
@@ -115,6 +85,47 @@ As a Claude Code plugin:
 Plugin skills are invoked as `/my-skills:<skill-name>`. The plugin reads from
 the repository, so edits take effect on the next session start or
 `/reload-plugins`.
+
+### Both hosts, from a clone
+
+```bash
+git clone git@github.com:Beloin/CustomLLMSkills.git
+cd CustomLLMSkills
+python3 scripts/skill_repo.py install
+```
+
+Installs every skill into `~/.claude/skills/<name>` and
+`~/.config/opencode/skills/<name>` as a symlink, so edits in the clone take
+effect immediately with no reinstall.
+
+| Flag | Effect |
+|---|---|
+| `--target claude\|opencode\|both` | which host to install into (default: both) |
+| `--mode link\|copy` | symlink the skill (default) or copy it |
+| `--dry-run` | show what would happen, change nothing |
+
+Override the destination with `CLAUDE_CONFIG_DIR` and `OPENCODE_CONFIG_DIR`.
+OpenCode also reads `~/.claude/skills` as a compatibility root, so a Claude
+Code install alone is already visible to OpenCode. Installing for both keeps
+each host's own directory authoritative.
+
+### OpenCode, without installing
+
+Point OpenCode at a clone through its own config, in
+`~/.config/opencode/opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "skills": {
+    "paths": ["/path/to/CustomLLMSkills/skills"]
+  }
+}
+```
+
+`skills.paths` takes directories that are scanned for `SKILL.md`. Restart
+OpenCode after editing the config. The `urls` key expects an HTTP catalog
+that serves `index.json`, not a git repository.
 
 ## Related skills
 
