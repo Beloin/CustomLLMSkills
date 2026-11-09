@@ -105,14 +105,16 @@ own directory authoritative.
 The default is a symlink, so edits in this repository take effect
 immediately with no reinstall.
 
-As a Claude Code plugin, from a hosted copy of this repository:
+As a Claude Code plugin:
 
 ```
-/plugin marketplace add <owner>/<repo>
+/plugin marketplace add Beloin/CustomLLMSkills
 /plugin install my-skills@my-skills
 ```
 
-Plugin skills are invoked as `/my-skills:<skill-name>`.
+Plugin skills are invoked as `/my-skills:<skill-name>`. The plugin reads from
+the repository, so edits take effect on the next session start or
+`/reload-plugins`.
 
 ## Related skills
 
